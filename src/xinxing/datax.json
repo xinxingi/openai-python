@@ -1,0 +1,50 @@
+{
+  "job": {
+    "setting": {
+      "speed": {
+        "channel": 1
+      }
+    },
+    "content": [
+      {
+        "reader": {
+          "name": "mysqlreader",
+          "parameter": {
+            "username": "big_data",
+            "password": "jxG5qutG7",
+            "connection": [
+              {
+                "querySql": ["SELECT document_id,city_id,city_name,source,type,name,mobile,community,address,price,idm_user_code,idm_user_tel,user_id,user_name,department_id,is_take,take_user_id,take_user_name,take_department_id,take_time,status,effect_time,fk_id,fk_code,reject_reason,if_deleted,create_time,update_time,company_id,idm_organization,current_date() etl_date FROM erp_business_opportunity"],
+                "jdbcUrl": ["jdbc:mysql://30a6c86fce18444e830cf74a49996960in01.internal.cn-east-3.mysql.rds.myhuaweicloud.com:3306/bi_base"]
+              }
+            ]
+          }
+        },
+        "writer": {
+          "name": "doriswriter",
+          "parameter": {
+            "loadUrl": ["10.198.0.29:8031"],
+            "loadProps": {
+            },
+            "column": ["document_id","city_id","city_name","source","type","name","mobile","community","address","price","idm_user_code","idm_user_tel","user_id","user_name","department_id","is_take","take_user_id","take_user_name","take_department_id","take_time","status","effect_time","fk_id","fk_code","reject_reason","if_deleted","create_time","update_time","company_id","idm_organization","etl_date"],
+            "username": "spark",
+            "password": "sparkadmin",
+            "preSql": ["truncate table ods.ods_zs_erp_business_opportunity"],
+            "flushInterval":30000,
+            "connection": [
+              {
+                "jdbcUrl": "jdbc:mysql:loadbalance://10.198.0.29:9030,10.198.0.30:9030,10.198.0.31:9030/ods",
+                "selectedDatabase": "ods",
+                "table": ["ods_zs_erp_business_opportunity"]
+              }
+            ],
+            "loadProps": {
+              "format": "json",
+              "strip_outer_array": true
+            }
+          }
+        }
+      }
+    ]
+  }
+}
